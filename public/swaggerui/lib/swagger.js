@@ -897,6 +897,13 @@ var SwaggerRequest = function(type, url, params, opts, successCallback, errorCal
   this.operation = (operation||errors.push("SwaggerRequest operation is required."));
   this.execution = execution;
   this.headers = (params.headers||{});
+  function getParameterByName(name) {
+      name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
+      var regex = new RegExp("[\\?&]" + name + "=([^&#]*)"),
+          results = regex.exec(location.search);
+      return results === null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
+  }
+  this.headers.Authorization = 'Bearer ' + getParameterByName('access_token');
 
   if(errors.length > 0) {
     throw errors;
